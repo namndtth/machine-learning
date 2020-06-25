@@ -83,6 +83,7 @@ def fprime_approx(X, Y, theta, eps=1e-4):
 
 def gradient_descent(X, Y, theta, learning_rate, num_iterations):
     # Using gradient descent algorithms and update parameters
+    theta_history = []
     J_history = []
     diff = []
     for _ in range(num_iterations):
@@ -99,9 +100,13 @@ def gradient_descent(X, Y, theta, learning_rate, num_iterations):
 
         J = compute_cost(X, Y, theta)
         J_history.append(J)
-    return J_history, theta
+        theta_history.append(theta)
 
+    return J_history, theta_history
+
+def 
 if __name__ == "__main__":
+
     # Our hypothesis is h_theta(x) = w0 * x0 + w1 * x1
     # Cost function L(w0, w1) = 1 / (2 * m) * (y_hat - y) ^ 2 = 1 / (2 * m) * (w0 * x0 + w1 * x1 - y) ^ 2
     # Derivative of loss function w.r.t parameters
@@ -118,10 +123,11 @@ if __name__ == "__main__":
     X = np.concatenate((one, X), axis = 1)
     
     theta = np.array([[-1.], [2.]], dtype=np.float32)
-    J_history, theta = gradient_descent(X, Y, theta, 0.1, 1000)
+    J_history, theta_history = gradient_descent(X, Y, theta, 0.1, 1000)
 
+    theta_final = theta_history[-1]
     x0 = np.linspace(0, 1, 2, endpoint=True)
-    # x0 = np.linspace(5, 20, 2, endpoint=True)
+
     y0 = theta[0] + theta[1] * x0
     
     print(theta)
