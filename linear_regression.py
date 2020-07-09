@@ -3,7 +3,7 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
-
+import matplotlib.animation as animation
 def load_data(fpath):
     """
     Params:
@@ -104,9 +104,7 @@ def gradient_descent(X, Y, theta, learning_rate, num_iterations):
 
     return J_history, theta_history
 
-def 
 if __name__ == "__main__":
-
     # Our hypothesis is h_theta(x) = w0 * x0 + w1 * x1
     # Cost function L(w0, w1) = 1 / (2 * m) * (y_hat - y) ^ 2 = 1 / (2 * m) * (w0 * x0 + w1 * x1 - y) ^ 2
     # Derivative of loss function w.r.t parameters
@@ -122,24 +120,31 @@ if __name__ == "__main__":
     one = np.ones((X.shape[0], 1))
     X = np.concatenate((one, X), axis = 1)
     
-    theta = np.array([[-1.], [2.]], dtype=np.float32)
-    J_history, theta_history = gradient_descent(X, Y, theta, 0.1, 1000)
-
-    theta_final = theta_history[-1]
-    x0 = np.linspace(0, 1, 2, endpoint=True)
-
-    y0 = theta[0] + theta[1] * x0
+    theta = np.array([[2], [1]], dtype=np.float32)
+    J_history, theta_history = gradient_descent(X, Y, theta, 1, 100)
     
-    print(theta)
-    
-    plt.figure()
-    plt.subplot(211)
-    plt.plot(X[:, 1], Y, 'bo')
-    plt.plot(x0, y0, 'y', linewidth=2)
+    fig, ax = plt.subplots()
 
-    plt.subplot(212)
-    plt.plot(J_history)
-    plt.xlabel("Num iterations")
-    plt.ylabel("Loss")
+    plt.xlabel('Independent variable')
+    plt.ylabel('Dependent variable')
+    plt.plot(X[:,1], Y, "bo")
+    
+    line, = ax.plot([], [], "r")
+
+    def init():
+        ax.set_xlim(0, 1)
+        ax.set_ylim(0, 10)
+        return line
+
+    def update(frame):
+        
+        theta = theta_history[frame]
+        x0 = np.linspace(0, 1, 2, endpoint=True)
+        y0 = theta[0] + theta[1] * x0
+        line.set_data(x0, y0)
+        
+        return line,
+
+    anim = animation.FuncAnimation(fig, update, frames=len(theta_history), blit=True)
     plt.show()
 
